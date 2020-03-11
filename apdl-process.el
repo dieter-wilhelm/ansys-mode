@@ -1,5 +1,5 @@
 ;;; apdl-process.el --- Managing runs and processes for APDL-Mode   -*- lexical-binding: t -*-
-;; Time-stamp: <2020-03-09>
+;; Time-stamp: <2020-03-11>
 
 ;; Copyright (C) 2006 - 2020  H. Dieter Wilhelm GPL V3
 
@@ -877,7 +877,7 @@ summary rows."
    ((and apdl-lmutil-program apdl-license-file)
     ;; lmutil calls with many license server specified takes loooooonnnnggg
     (message "Retrieving license (%s) status, this may take some time..." apdl-license)
-    (with-current-buffer (get-buffer-create "*APDL-licenses*")
+    (with-current-buffer (get-buffer-create "*Licenses*")
       (delete-region (point-min) (point-max)))
     ;; syncronous call
     (call-process apdl-lmutil-program nil "*Licenses*" nil "lmstat" "-c "  apdl-license-file  "-a")
@@ -894,19 +894,19 @@ summary rows."
         (local-set-key (kbd "g") 'apdl-license-status)
         (local-set-key (kbd "o") 'apdl-occur)
 
-        ;; ;; remove users
-        ;; (goto-char (point-min))
-        ;; (while (not (eobp))
-        ;;   (push-mark (point))
-        ;;   (search-forward-regexp "Users of " nil t)
-        ;;   (beginning-of-line)
-        ;;   (delete-region (mark) (point))
-        ;;   (forward-line 1))
-        ;; (goto-char (point-max))
-        ;; (push-mark (point))
-        ;; (search-backward-regexp "Users of " nil t)
-        ;; (forward-line 1)
-        ;; (delete-region (mark) (point))
+        ;; remove users
+        (goto-char (point-min))
+        (while (not (eobp))
+          (push-mark (point))
+          (search-forward-regexp "Users of " nil t)
+          (beginning-of-line)
+          (delete-region (mark) (point))
+          (forward-line 1))
+        (goto-char (point-max))
+        (push-mark (point))
+        (search-backward-regexp "Users of " nil t)
+        (forward-line 1)
+        (delete-region (mark) (point))
 
         ;; remove empty lines
         (goto-char (point-min))
